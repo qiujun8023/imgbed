@@ -31,7 +31,6 @@
     </div>
 
     <el-dialog
-      class="setting"
       title="服务商配置"
       :visible.sync="needSetting"
       :show-close="false"
