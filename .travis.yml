@@ -31,6 +31,7 @@ after_success:
   - rm -rf dist/.git
   - mv dist deploy/project/imgbed
   - ./upx --auth $UPX_AUTH sync -delete --strong ./deploy
+  - ./upx --auth $UPX_AUTH purge url --list $UPX_PURGE
   - rm -rf deploy
 
 branches:
