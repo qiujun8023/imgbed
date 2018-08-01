@@ -1,5 +1,5 @@
 <template>
-  <div class="upload">
+  <div class="upload" @pause="onPaste">
     <div class="uploader" v-show="!preview">
       <el-upload
         drag
@@ -73,23 +73,12 @@ export default {
     ImageCop
   },
 
-  created () {
-    console.log('created', this.onPaste)
-    window.addEventListener('paste', this.onPaste)
-  },
-
-  beforeDestroy () {
-    console.log('destoryed', this.onPaste)
-    window.removeEventListener('parse', this.onPaste)
-  },
-
   methods: {
     closePreview () {
       this.image = {}
     },
 
     onPaste ({ clipboardData: cb }) {
-      console.log('paste')
       if (cb.files && cb.files.length) {
         let file = cb.files[0]
         if (isImage(file)) {
@@ -103,7 +92,6 @@ export default {
     },
 
     onUploadSuccess (res) {
-      console.log('success')
       this.image = {
         ...this.image,
         ...res
