@@ -1,18 +1,39 @@
 <template>
-  <el-card class="image-cop" shadow="hover" :body-style="{ padding: 0 }">
-    <img class="image-img" :src="url" @click="copy(image.url)">
-    <div class="image-title" @click="copy(image.url)">
-      <span>{{image.name}}</span>
+  <el-card
+    class="image-cop"
+    shadow="hover"
+    ref="card"
+    @click.native="copy(image.url)"
+    :body-style="{ padding: 0 }">
+
+    <div class="image-preview" v-if="isPreview">
+      <div class="image-img"
+        :style="imageStyle"
+        @click="copy(image.url)">
+      </div>
     </div>
-    <span class="image-delete" @click="remove" v-if="!isPreview">
+
+    <div class="image-uploaded" v-else>
+      <div class="image-img"
+        :style="imageStyle"
+        v-lazy:background-image="image.url"
+        v-loading="loading"
+        @loaded="loaded">
+      </div>
+
+      <div class="image-title">
+        <span>{{image.name}}</span>
+      </div>
+    </div>
+
+    <span class="image-delete" @click.stop="remove">
       <i class="el-icon-close"></i>
     </span>
+
   </el-card>
 </template>
 
 <script>
-import clipboard from '@/utils/clipboard'
-
 export default {
   name: 'image-cop',
   props: {
@@ -26,15 +47,54 @@ export default {
     }
   },
 
-  computed: {
-    url () {
-      return this.isPreview ? this.image.blob : this.image.url
+  data () {
+    return {
+      loading: true,
+      imageWidth: 0
     }
   },
 
+  computed: {
+    imageHeight () {
+      return Math.round(this.imageWidth / 16 * 9)
+    },
+
+    imageStyle () {
+      if (this.isPreview) {
+        return {
+          'height': this.imageHeight + 'px',
+          'background-image': `url('${this.image.blob}')`
+        }
+      }
+
+      return {
+        'height': this.imageHeight + 'px'
+      }
+    }
+  },
+
+  mounted () {
+    this.onImageWidthChange()
+  },
+
   methods: {
-    copy (url) {
-      clipboard(this, url)
+    onImageWidthChange () {
+      let { card } = this.$refs
+      if (card) {
+        this.imageWidth = card.$el.offsetWidth
+      }
+    },
+
+    loaded () {
+      this.loading = false
+    },
+
+    copy (text) {
+      this.$copyText(text).then((e) => {
+        this.$message.success('已复制：' + text)
+      }, (e) => {
+        this.$message.error('复制失败：' + e.message)
+      })
     },
 
     remove () {

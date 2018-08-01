@@ -30,11 +30,16 @@ html, body {
 
 .upload {
   height: 100%;
-  .upload-cop {
+
+  .uploader,
+  .previewer {
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .previewer-box {
+    width: 60%;
   }
   .el-dialog {
     width: 480px;
@@ -84,7 +89,11 @@ html, body {
 
   .image-img {
     width: 100%;
-    display: block;
+    height: 200px;
+    opacity: 1;
+    background-position: 50%;
+    background-size: cover;
+    transition: opacity .5s linear;
   }
   .image-title {
     padding: 5px;;

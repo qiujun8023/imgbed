@@ -4,6 +4,7 @@ import '@/assets/less/style.less'
 import Vue from 'vue'
 import ElementUI from 'element-ui'
 import VueClipboard from 'vue-clipboard2'
+import VueLazyload from 'vue-lazyload'
 import App from '@/App.vue'
 import store from '@/store'
 import router from '@/router'
@@ -14,6 +15,10 @@ Vue.use(ElementUI)
 
 VueClipboard.config.autoSetContainer = true
 Vue.use(VueClipboard)
+
+Vue.use(VueLazyload, {
+  dispatchEvent: true
+})
 
 new Vue({
   store,

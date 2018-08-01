@@ -1,17 +1,34 @@
 <template>
   <div class="upload">
-    <el-upload
-      drag
-      class="upload-cop"
-      action=""
-      accept="image/*"
-      :show-file-list="false"
-      :http-request="onUpload"
-      v-loading="uploading"
-      :element-loading-text="'正在上传 ' + percent + '%'">
-      <i class="el-icon-upload"></i>
-      <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-    </el-upload>
+    <div class="uploader" v-show="!preview">
+      <el-upload
+        drag
+        multiple
+        action=""
+        accept="image/*"
+        :show-file-list="false"
+        :http-request="onUpload"
+        :element-loading-text="'正在上传 ' + percent + '%'"
+        v-loading="uploading">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+      </el-upload>
+    </div>
+
+    <div
+      class="previewer"
+      v-if="preview">
+      <div
+        class="previewer-box"
+        v-loading="uploading"
+        :element-loading-text="'上传中 ' + percent + '%'">
+        <image-cop
+          :image="image"
+          :isPreview="true"
+          @remove="closePreview">
+        </image-cop>
+      </div>
+    </div>
 
     <el-dialog
       class="setting"
@@ -26,10 +43,10 @@
 </template>
 
 <script>
+import ImageCop from '@/components/Image'
+import SettingCop from '@/components/Setting'
 import isImage from '@/utils/is-image'
 import * as mutationTypes from '@/store/mutation-types'
-import SettingCop from '@/components/Setting'
-import clipboard from '@/utils/clipboard'
 
 export default {
   name: 'upload',
@@ -45,23 +62,34 @@ export default {
   computed: {
     needSetting () {
       return !this.$store.getters.uploader
+    },
+    preview () {
+      return Boolean(this.image.blob)
     }
   },
 
   components: {
-    SettingCop
+    SettingCop,
+    ImageCop
   },
 
   created () {
-    document.addEventListener('paste', this.onPaste)
+    console.log('created', this.onPaste)
+    window.addEventListener('paste', this.onPaste)
   },
 
-  destroyed () {
-    document.removeEventListener('parse', this.onPaste)
+  beforeDestroy () {
+    console.log('destoryed', this.onPaste)
+    window.removeEventListener('parse', this.onPaste)
   },
 
   methods: {
+    closePreview () {
+      this.image = {}
+    },
+
     onPaste ({ clipboardData: cb }) {
+      console.log('paste')
       if (cb.files && cb.files.length) {
         let file = cb.files[0]
         if (isImage(file)) {
@@ -75,13 +103,13 @@ export default {
     },
 
     onUploadSuccess (res) {
+      console.log('success')
       this.image = {
         ...this.image,
         ...res
       }
       this.uploading = false
       this.$store.commit(mutationTypes.ADD_UPLOAD, this.image)
-      clipboard(this, this.image.url)
     },
 
     onUploadError (res) {
