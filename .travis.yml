@@ -9,9 +9,10 @@ cache:
 
 install:
   - npm install -q
+  - wget http://collection.b0.upaiyun.com/softwares/upx/upx-linux-amd64-v0.2.3 -O upx
+  - chmod 755 upx
 
 before_script:
-  - rm -rf dist
   - git clone https://$DEPLOY_TOKEN@$GIT_DEPLOY_REPO -b $GIT_DEPLOY_BRANCH dist
   - cd dist && ls | xargs rm -rf && cd ..
 
@@ -25,6 +26,12 @@ after_success:
   - git add --all .
   - git diff --quiet --exit-code --cached || git commit -m "Auto Build At `TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S'`"
   - git push https://$DEPLOY_TOKEN@$GIT_DEPLOY_REPO HEAD:$GIT_DEPLOY_BRANCH
+  - cd ..
+  - mkdir -p deploy/project
+  - rm -rf dist/.git
+  - mv dist deploy/project/imgbed
+  - ./upx --auth $UPX_AUTH sync -delete --strong ./deploy
+  - rm -rf deploy
 
 branches:
   only:
