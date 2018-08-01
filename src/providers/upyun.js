@@ -74,7 +74,7 @@ export default class UpYun {
 
   errorHandle (err) {
     return {
-      message: _.get(err, 'response.data.message')
+      message: _.get(err, 'response.data.message') || err.message
     }
   }
 

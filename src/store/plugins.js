@@ -15,7 +15,8 @@ let localStoragePlugin = (store) => {
         localStorage.setItem(storageTypes.CONFIGS, JSON.stringify(store.state.configs))
         break
       case mutationTypes.SET_UPLOADED:
-      case mutationTypes.UPLOAD_SUCCESS:
+      case mutationTypes.ADD_UPLOAD:
+      case mutationTypes.REMOVE_UPLOAD:
         localStorage.setItem(storageTypes.UPLOADED, JSON.stringify(store.state.uploaded))
         break
     }

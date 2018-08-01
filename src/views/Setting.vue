@@ -1,51 +1,20 @@
 <template>
-  <el-form
-    ref="form"
-    class="setting-cop"
-    :model="form"
-    :rules="rules">
-
-    <el-form-item
-      label="服务商："
-      :prop="'provider'">
-      <el-select
-        v-model="form.provider"
-        placeholder="请选择服务商"
-        @change="onProviderChange">
-        <el-option
-          :key="provider.value"
-          :label="provider.label"
-          :value="provider.value"
-          v-for="provider in providersForm">
-        </el-option>
-      </el-select>
-    </el-form-item>
-
-    <el-form-item
-      :label="param.label"
-      :key="index"
-      :prop="param.name"
-      v-for="(param, index) in params">
-      <el-input
-        v-model="form[param.name]"
-        :type="param.type"
-        :placeholder="param.placeholder">
-      </el-input>
-    </el-form-item>
-
-    <el-form-item>
-      <el-button type="primary" @click="save">保 存</el-button>
-    </el-form-item>
-
-  </el-form>
+  <div class="setting">
+    <setting-cop/>
+  </div>
 </template>
 
 <script>
 import _ from 'lodash'
 import { SET_PROVIDER_NAME, SET_CONFIGS } from '@/store/mutation-types'
+import SettingCop from '@/components/Setting'
 
 export default {
-  name: 'setting-cop',
+  name: 'setting',
+
+  components: {
+    SettingCop
+  },
 
   data () {
     return {
