@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import upyun from 'upyun'
 import axios from 'axios'
+import dateFormat from 'dateformat'
 import obj2fd from '@/utils/obj2fd'
 
 export default class UpYun {
@@ -60,7 +61,7 @@ export default class UpYun {
   getPolicy () {
     return {
       body: upyun.sign.getPolicyAndAuthorization(this.service, {
-        'save-key': '/image/{filemd5}{.suffix}'
+        'save-key': `/image/${dateFormat(new Date(), 'yyyy/mm/dd')}/{filemd5}{.suffix}`
       })
     }
   }
