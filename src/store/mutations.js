@@ -13,11 +13,19 @@ export default {
     state.uploaded = uploaded
   },
 
-  [mutationTypes.ADD_UPLOAD] (state, file) {
+  [mutationTypes.ADD_UPLOADED] (state, file) {
     state.uploaded.unshift(file)
   },
 
-  [mutationTypes.REMOVE_UPLOAD] (state, index) {
+  [mutationTypes.REMOVE_UPLOADED] (state, index) {
     state.uploaded.splice(index, 1)
+  },
+
+  [mutationTypes.SET_UPLOADING] (state, uploading) {
+    state.uploading = uploading
+  },
+
+  [mutationTypes.REMOVE_UPLOADING] (state) {
+    state.uploading = {}
   }
 }

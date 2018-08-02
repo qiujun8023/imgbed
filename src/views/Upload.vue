@@ -1,5 +1,5 @@
 <template>
-  <div class="upload" @pause="onPaste">
+  <div class="upload" @paste="onPaste">
     <div class="uploader" v-show="!preview">
       <el-upload
         drag
@@ -9,7 +9,7 @@
         :show-file-list="false"
         :http-request="onUpload"
         :element-loading-text="'正在上传 ' + percent + '%'"
-        v-loading="uploading">
+        v-loading="loading">
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
       </el-upload>
@@ -20,10 +20,10 @@
       v-if="preview">
       <div
         class="previewer-box"
-        v-loading="uploading"
+        v-loading="loading"
         :element-loading-text="'上传中 ' + percent + '%'">
         <image-cop
-          :image="image"
+          :image="uploading"
           :isPreview="true"
           @remove="closePreview">
         </image-cop>
@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import uuidv1 from 'uuid/v1'
+import { mapState } from 'vuex'
 import ImageCop from '@/components/Image'
 import SettingCop from '@/components/Setting'
 import isImage from '@/utils/is-image'
@@ -54,16 +56,19 @@ export default {
     return {
       image: {},
       percent: 0,
-      uploading: false
+      loading: false
     }
   },
 
   computed: {
+    ...mapState([
+      'uploading'
+    ]),
     needSetting () {
       return !this.$store.getters.uploader
     },
     preview () {
-      return Boolean(this.image.blob)
+      return Boolean(this.uploading.blob)
     }
   },
 
@@ -74,7 +79,7 @@ export default {
 
   methods: {
     closePreview () {
-      this.image = {}
+      this.$store.commit(mutationTypes.REMOVE_UPLOADING)
     },
 
     onPaste ({ clipboardData: cb }) {
@@ -91,16 +96,17 @@ export default {
     },
 
     onUploadSuccess (res) {
-      this.image = {
-        ...this.image,
+      let image = {
+        ...this.uploading,
         ...res
       }
-      this.uploading = false
-      this.$store.commit(mutationTypes.ADD_UPLOAD, this.image)
+      this.loading = false
+      this.$store.commit(mutationTypes.ADD_UPLOADED, image)
+      this.$store.commit(mutationTypes.SET_UPLOADING, image)
     },
 
     onUploadError (res) {
-      this.uploading = false
+      this.loading = false
       this.$message.error('上传失败：' + res.message)
     },
 
@@ -109,17 +115,20 @@ export default {
     },
 
     upload (file) {
-      if (this.uploading) {
+      if (this.loading) {
         this.$message.error('正在上传其他图片，请稍候...')
         return false
       }
 
       this.percent = 0
-      this.uploading = true
-      this.image = {
+      this.loading = true
+
+      this.$store.commit(mutationTypes.SET_UPLOADING, {
         name: file.name,
+        uuid: uuidv1(),
         blob: URL.createObjectURL(file)
-      }
+      })
+
       this.$store.getters.uploader.upload(
         file,
         this.onUploadProgress,

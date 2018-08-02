@@ -66,9 +66,11 @@ export default class UpYun {
   }
 
   successHandle (file, res) {
+    let url = this.requestUrl + _.get(res, 'data.url')
     return {
-      name: file.name,
-      url: this.requestUrl + _.get(res, 'data.url')
+      url,
+      thumb: url + '!/both/320x180',
+      name: file.name
     }
   }
 

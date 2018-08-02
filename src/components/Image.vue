@@ -16,7 +16,7 @@
     <div class="image-uploaded" v-else>
       <div class="image-img"
         :style="imageStyle"
-        v-lazy:background-image="image.url"
+        v-lazy:background-image="image.thumb || image.url"
         v-loading="loading"
         @loaded="loaded">
       </div>
@@ -75,6 +75,11 @@ export default {
 
   mounted () {
     this.onImageWidthChange()
+    window.addEventListener('resize', this.onImageWidthChange)
+  },
+
+  beforeDestroy () {
+    window.removeEventListener('resize', this.onImageWidthChange)
   },
 
   methods: {

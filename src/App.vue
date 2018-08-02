@@ -1,8 +1,12 @@
 <template>
-  <div class="app" id="app">
+  <div class="app">
     <div class="header">
       <div class="container">
-        <el-menu :router="true" :default-active="$route.path" mode="horizontal">
+        <el-menu
+          class="navbar"
+          mode="horizontal"
+          :router="true"
+          :default-active="$route.path">
           <el-menu-item index="/">
             <i class="el-icon-upload2"></i>上传
           </el-menu-item>
