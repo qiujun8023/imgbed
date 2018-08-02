@@ -12,27 +12,23 @@ install:
   - wget http://collection.b0.upaiyun.com/softwares/upx/upx-linux-amd64-v0.2.3 -O upx
   - chmod 755 upx
 
-before_script:
-  - git clone https://$DEPLOY_TOKEN@$GIT_DEPLOY_REPO -b $GIT_DEPLOY_BRANCH dist
-  - cd dist && ls | xargs rm -rf && cd ..
-
 script:
   - npm run build
-
-after_success:
-  - cd dist
-  - git config user.name $GIT_USER_NAME
-  - git config user.email $GIT_USER_EMAIL
-  - git add --all .
-  - git diff --quiet --exit-code --cached || git commit -m "Auto Build At `TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S'`"
-  - git push https://$DEPLOY_TOKEN@$GIT_DEPLOY_REPO HEAD:$GIT_DEPLOY_BRANCH
-  - cd ..
-  - mkdir -p deploy/project
-  - rm -rf dist/.git
-  - mv dist deploy/project/imgbed
-  - ./upx --auth $UPX_AUTH sync -delete --strong ./deploy
-  - ./upx --auth $UPX_AUTH purge $UPX_PURGE
   - rm -rf deploy
+  - mkdir -p deploy/project
+  - mv dist deploy/project/imgbed
+
+deploy:
+  - provider: script
+    skip-cleanup: true
+    script: ./upx --auth $UPX_AUTH sync -delete --strong ./deploy
+  - provider: pages
+    skip-cleanup: true
+    keep-history: true
+    local-dir: deploy/project/imgbed
+    target-branch: $GITHUB_BRANCH
+    github-token: $GITHUB_TOKEN
+    verbose: true
 
 branches:
   only:
