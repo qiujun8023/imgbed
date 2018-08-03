@@ -96,7 +96,7 @@ export default {
 
     copy (text) {
       this.$copyText(text).then((e) => {
-        this.$message.success('已复制：' + text)
+        this.$message.success('已复制到粘贴板')
       }, (e) => {
         this.$message.error('复制失败：' + e.message)
       })
