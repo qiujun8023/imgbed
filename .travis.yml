@@ -1,5 +1,11 @@
 language: node_js
 
+env:
+  - PACKAGE_VERSION=$(npm --loglevel silent run version)
+
+services:
+  - docker
+
 node_js:
   - "lts/*"
 
@@ -12,23 +18,21 @@ install:
   - wget http://collection.b0.upaiyun.com/softwares/upx/upx-linux-amd64-v0.2.3 -O upx
   - chmod 755 upx
 
+before_script:
+  - rm -rf deploy
+
 script:
   - npm run build
-  - rm -rf deploy
-  - mkdir -p deploy/project
-  - mv dist deploy/project/imgbed
 
-deploy:
-  - provider: script
-    skip-cleanup: true
-    script: ./upx --auth $UPX_AUTH sync -delete --strong ./deploy
-  - provider: pages
-    skip-cleanup: true
-    keep-history: true
-    local-dir: deploy/project/imgbed
-    target-branch: $GITHUB_BRANCH
-    github-token: $GITHUB_TOKEN
-    verbose: true
+script:
+  - npm run build
+  - docker build -t $DOCKER_REPOSITORY:$PACKAGE_VERSION -t $DOCKER_REPOSITORY:latest .
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push $DOCKER_REPOSITORY
+
+after_success:
+  - mkdir -p deploy/project && mv dist deploy/project/imgbed
+  - ./upx --auth $UPX_AUTH sync --strong ./deploy
 
 branches:
   only:
