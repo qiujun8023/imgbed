@@ -1,21 +1,26 @@
-# imgbed
+# 基于云存储的图床
 
-## Project setup
-```
-npm install
+## 说明
+
+### 支持的云存储
+
+- 又拍云
+
+### 演示
+> [Demo](https://imgbed.qiujun.me/)
+
+## 部署
+
+### 使用 Docker 部署
+
+#### 运行
+
+```bash
+docker run --name imgbed -p 8888:80 -d qious/imgbed
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+#### 访问
 
-### Compiles and minifies for production
 ```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
+curl http://localhost:8888
 ```
