@@ -6,30 +6,20 @@
     @click.native="copy(image.url)"
     :body-style="{ padding: 0 }">
 
-    <div class="image-preview" v-if="isPreview">
-      <div class="image-img"
-        :style="imageStyle"
-        @click="copy(image.url)">
-      </div>
+    <div class="image-img"
+      :style="imageStyle"
+      v-lazy:background-image="image.preview || image.thumb || image.url"
+      v-loading="loading"
+      @loaded="loaded">
     </div>
 
-    <div class="image-uploaded" v-else>
-      <div class="image-img"
-        :style="imageStyle"
-        v-lazy:background-image="image.thumb || image.url"
-        v-loading="loading"
-        @loaded="loaded">
-      </div>
-
-      <div class="image-title">
-        <span>{{image.name}}</span>
-      </div>
+    <div class="image-title">
+      <span>{{image.name}}</span>
     </div>
 
     <span class="image-delete" @click.stop="remove">
       <i class="el-icon-close"></i>
     </span>
-
   </el-card>
 </template>
 

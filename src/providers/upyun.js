@@ -70,7 +70,8 @@ export default class UpYun {
     let url = this.requestUrl + _.get(res, 'data.url')
     return {
       url,
-      thumb: url + '!/both/320x180',
+      thumb: url + '!/both/80x80',
+      preview: url + '!/both/320x180',
       name: file.name
     }
   }

@@ -69,6 +69,7 @@ export default {
     provider () {
       return this.$store.getters.getProvider(this.form.provider)
     },
+
     rules () {
       return {
         provider: [
@@ -77,6 +78,7 @@ export default {
         ...(this.provider && this.provider.rules) || {}
       }
     },
+
     params () {
       return (this.provider && this.provider.params) || []
     },

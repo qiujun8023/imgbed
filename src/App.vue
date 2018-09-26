@@ -19,16 +19,38 @@
         </el-menu>
       </div>
     </div>
+
     <div class="main">
       <div class="container">
         <router-view></router-view>
       </div>
     </div>
+
+    <el-dialog
+      title="服务商配置"
+      :visible.sync="needSetting"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false">
+      <setting-cop/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import SettingCop from '@/components/Setting'
+
 export default {
-  name: 'app'
+  name: 'app',
+
+  components: {
+    SettingCop
+  },
+
+  computed: {
+    needSetting () {
+      return !this.$store.getters.uploader
+    }
+  }
 }
 </script>

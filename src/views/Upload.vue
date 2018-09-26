@@ -1,6 +1,6 @@
 <template>
   <div class="upload" @paste="onPaste">
-    <div class="uploader" v-show="!preview">
+    <div class="uploader">
       <el-upload
         drag
         multiple
@@ -14,30 +14,6 @@
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
       </el-upload>
     </div>
-
-    <div
-      class="previewer"
-      v-if="preview">
-      <div
-        class="previewer-box"
-        v-loading="loading"
-        :element-loading-text="'上传中 ' + percent + '%'">
-        <image-cop
-          :image="uploading"
-          :isPreview="true"
-          @remove="closePreview">
-        </image-cop>
-      </div>
-    </div>
-
-    <el-dialog
-      title="服务商配置"
-      :visible.sync="needSetting"
-      :show-close="false"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false">
-      <setting-cop/>
-    </el-dialog>
   </div>
 </template>
 
@@ -45,12 +21,15 @@
 import uuidv1 from 'uuid/v1'
 import { mapState } from 'vuex'
 import ImageCop from '@/components/Image'
-import SettingCop from '@/components/Setting'
 import isImage from '@/utils/is-image'
 import * as mutationTypes from '@/store/mutation-types'
 
 export default {
   name: 'upload',
+
+  components: {
+    ImageCop
+  },
 
   data () {
     return {
@@ -63,18 +42,7 @@ export default {
   computed: {
     ...mapState([
       'uploading'
-    ]),
-    needSetting () {
-      return !this.$store.getters.uploader
-    },
-    preview () {
-      return Boolean(this.uploading.blob)
-    }
-  },
-
-  components: {
-    SettingCop,
-    ImageCop
+    ])
   },
 
   methods: {
@@ -103,6 +71,26 @@ export default {
       this.loading = false
       this.$store.commit(mutationTypes.ADD_UPLOADED, image)
       this.$store.commit(mutationTypes.SET_UPLOADING, image)
+
+      this.$notify({
+        dangerouslyUseHTMLString: true,
+        customClass: 'upload-notification',
+        message: `
+          <div class="image" style="background: url('${image.thumb}') center center no-repeat;"></div>
+          <div class="content">
+            <h2 class="title">上传成功</h2>
+            <p class="text">点击复制链接</p>
+          </div>
+        `,
+        duration: 0,
+        onClick () {
+          this.$copyText(image.url).then((e) => {
+            this.$message.success('已复制到粘贴板')
+          }, (e) => {
+            this.$message.error('复制失败：' + e.message)
+          })
+        }
+      })
     },
 
     onUploadError (res) {
