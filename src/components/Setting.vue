@@ -26,11 +26,26 @@
       :key="index"
       :prop="param.name"
       v-for="(param, index) in params">
+
       <el-input
-        v-model="form[param.name]"
         :type="param.type"
-        :placeholder="param.placeholder">
+        :placeholder="param.placeholder"
+        v-model="form[param.name]"
+        v-if="param.component == 'input'">
       </el-input>
+
+      <el-select
+        :placeholder="param.placeholder"
+        v-model="form[param.name]"
+        v-if="param.component == 'select'">
+        <el-option
+          v-for="option in param.options"
+          :key="option.value"
+          :label="option.label"
+          :value="option.value">
+        </el-option>
+      </el-select>
+
     </el-form-item>
 
     <el-form-item>
@@ -88,18 +103,11 @@ export default {
     }
   },
 
-  created () {
-    if (this.providersForm.length === 1) {
-      this.form.providerName = this.providersForm[0].value
-      this.onProviderChange()
-    }
-  },
-
   methods: {
     onProviderChange () {
       let config = this.$store.getters.getConfig(this.form.providerName) || {}
       for (let param of this.params) {
-        this.form[param.name] = this.form[param.name] || config[param.name] || ''
+        this.$set(this.form, param.name, this.form[param.name] || config[param.name] || '')
       }
     },
 

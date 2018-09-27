@@ -1,5 +1,7 @@
 import UpYun from './upyun'
+import Qiniu from './qiniu'
 
 export default {
-  upyun: UpYun
+  upyun: UpYun,
+  qiniu: Qiniu
 }

@@ -18,7 +18,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "dateformat": "^3.0.3",
-    "element-ui": "2.4.4",
+    "element-ui": "^2.4.7",
     "lodash": "^4.17.10",
     "upyun": "^3.3.4",
     "uuid": "^3.3.2",

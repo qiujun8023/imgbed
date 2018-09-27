@@ -11,23 +11,27 @@ export default class UpYun {
 
   static params = [{
     name: 'serviceName',
-    type: 'text',
     label: '服务名称：',
+    component: 'input',
+    type: 'text',
     placeholder: '服务名称'
   }, {
     name: 'operatorName',
-    type: 'text',
     label: '操作员：',
+    component: 'input',
+    type: 'text',
     placeholder: '操作员名称'
   }, {
     name: 'password',
-    type: 'password',
     label: '操作员密码：',
+    component: 'input',
+    type: 'password',
     placeholder: '操作员密码'
   }, {
     name: 'requestUrl',
-    type: 'text',
     label: '加速域名地址：',
+    component: 'input',
+    type: 'text',
     placeholder: 'https://example.com'
   }]
 
