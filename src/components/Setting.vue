@@ -9,7 +9,7 @@
       label="服务商："
       :prop="'provider'">
       <el-select
-        v-model="form.provider"
+        v-model="form.providerName"
         placeholder="请选择服务商"
         @change="onProviderChange">
         <el-option
@@ -42,7 +42,7 @@
 
 <script>
 import _ from 'lodash'
-import { SET_PROVIDER_NAME, SET_CONFIGS } from '@/store/mutation-types'
+import { SET_USING, SET_CONFIGS } from '@/store/mutation-types'
 
 export default {
   name: 'setting-cop',
@@ -50,7 +50,7 @@ export default {
   data () {
     return {
       form: {
-        provider: null
+        providerName: null
       }
     }
   },
@@ -67,12 +67,12 @@ export default {
     },
 
     provider () {
-      return this.$store.getters.getProvider(this.form.provider)
+      return this.$store.getters.getProvider(this.form.providerName)
     },
 
     rules () {
       return {
-        provider: [
+        providerName: [
           { required: true, message: '请选择服务商', trigger: 'blur' }
         ],
         ...(this.provider && this.provider.rules) || {}
@@ -90,14 +90,14 @@ export default {
 
   created () {
     if (this.providersForm.length === 1) {
-      this.form.provider = this.providersForm[0].value
+      this.form.providerName = this.providersForm[0].value
       this.onProviderChange()
     }
   },
 
   methods: {
     onProviderChange () {
-      let config = this.$store.getters.getConfig(this.form.provider) || {}
+      let config = this.$store.getters.getConfig(this.form.providerName) || {}
       for (let param of this.params) {
         this.form[param.name] = this.form[param.name] || config[param.name] || ''
       }
@@ -108,10 +108,10 @@ export default {
         if (!valid) {
           return false
         }
-        this.$store.commit(SET_PROVIDER_NAME, this.form.provider)
+        this.$store.commit(SET_USING, this.form.providerName)
         this.$store.commit(SET_CONFIGS, {
           ...this.$store.state.configs,
-          [this.form.provider]: this.form
+          [this.form.providerName]: this.form
         })
       })
     }

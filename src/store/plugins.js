@@ -2,14 +2,14 @@ import * as mutationTypes from '@/store/mutation-types'
 import * as storageTypes from '@/store/storage-types'
 
 let localStoragePlugin = (store) => {
-  store.commit(mutationTypes.SET_PROVIDER_NAME, localStorage.getItem(storageTypes.PROVIDER_NAME) || '')
+  store.commit(mutationTypes.SET_USING, localStorage.getItem(storageTypes.USING) || '')
   store.commit(mutationTypes.SET_CONFIGS, JSON.parse(localStorage.getItem(storageTypes.CONFIGS) || '{}'))
   store.commit(mutationTypes.SET_UPLOADED, JSON.parse(localStorage.getItem(storageTypes.UPLOADED) || '[]'))
 
   store.subscribe((mutation) => {
     switch (mutation.type) {
-      case mutationTypes.SET_PROVIDER_NAME:
-        localStorage.setItem(storageTypes.PROVIDER_NAME, store.state.providerName)
+      case mutationTypes.SET_USING:
+        localStorage.setItem(storageTypes.USING, store.state.using)
         break
       case mutationTypes.SET_CONFIGS:
         localStorage.setItem(storageTypes.CONFIGS, JSON.stringify(store.state.configs))

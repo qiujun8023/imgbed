@@ -71,12 +71,7 @@ export default {
       this.upload(file)
     },
 
-    onUploadSuccess (uuid, res) {
-      let image = {
-        name: this.uploading[uuid].name,
-        ...res
-      }
-
+    onUploadSuccess (uuid, image) {
       this.$set(this.uploading[uuid], 'loading', false)
       this.$store.commit(mutationTypes.ADD_UPLOADED, image)
 

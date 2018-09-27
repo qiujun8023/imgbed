@@ -48,8 +48,6 @@ export default class UpYun {
 
   constructor (serviceName, operatorName, password, requestUrl) {
     this.serviceName = serviceName
-    this.operatorName = operatorName
-    this.password = password
     this.requestUrl = requestUrl
     this.service = new upyun.Service(serviceName, operatorName, password)
   }
@@ -70,9 +68,9 @@ export default class UpYun {
     let url = this.requestUrl + _.get(res, 'data.url')
     return {
       url,
+      name: file.name,
       thumb: url + '!/both/80x80',
-      preview: url + '!/both/320x180',
-      name: file.name
+      preview: url + '!/both/320x180'
     }
   }
 

@@ -2,7 +2,7 @@ import providers from '@/providers'
 
 export default {
   providers,
-  providerName: null,
+  using: null,
   configs: {},
   uploaded: []
 }

@@ -1,13 +1,14 @@
 export default {
   config (state) {
-    return state.configs[state.providerName]
+    return state.configs[state.using]
   },
   getConfig (state) {
-    return (providerName) => state.configs[providerName]
+    return (configName) => state.configs[configName]
   },
 
-  provider (state) {
-    return state.providers[state.providerName]
+  provider (state, getters) {
+    let { config } = getters
+    return config && state.providers[config.providerName]
   },
   getProvider (state) {
     return (providerName) => state.providers[providerName]

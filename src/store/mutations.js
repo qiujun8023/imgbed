@@ -1,8 +1,8 @@
 import * as mutationTypes from '@/store/mutation-types'
 
 export default {
-  [mutationTypes.SET_PROVIDER_NAME] (state, providerName) {
-    state.providerName = providerName
+  [mutationTypes.SET_USING] (state, using) {
+    state.using = using
   },
 
   [mutationTypes.SET_CONFIGS] (state, configs) {
