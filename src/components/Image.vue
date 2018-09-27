@@ -30,10 +30,6 @@ export default {
     image: {
       type: Object,
       required: true
-    },
-    isPreview: {
-      type: Boolean,
-      default: false
     }
   },
 
@@ -50,13 +46,6 @@ export default {
     },
 
     imageStyle () {
-      if (this.isPreview) {
-        return {
-          'height': this.imageHeight + 'px',
-          'background-image': `url('${this.image.blob}')`
-        }
-      }
-
       return {
         'height': this.imageHeight + 'px'
       }

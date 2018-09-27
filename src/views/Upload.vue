@@ -19,7 +19,6 @@
 
 <script>
 import uuidv1 from 'uuid/v1'
-import { mapState } from 'vuex'
 import ImageCop from '@/components/Image'
 import isImage from '@/utils/is-image'
 import * as mutationTypes from '@/store/mutation-types'
@@ -33,23 +32,32 @@ export default {
 
   data () {
     return {
-      image: {},
-      percent: 0,
-      loading: false
+      uploading: {}
     }
   },
 
   computed: {
-    ...mapState([
-      'uploading'
-    ])
+    percent () {
+      let total = 0
+      let loaded = 0
+      for (let uuid in this.uploading) {
+        total += 100
+        loaded += this.uploading[uuid].percent
+      }
+      return total === 0 ? 0 : Math.round(loaded / total * 100)
+    },
+
+    loading () {
+      for (let uuid in this.uploading) {
+        if (this.uploading[uuid].loading) {
+          return true
+        }
+      }
+      return false
+    }
   },
 
   methods: {
-    closePreview () {
-      this.$store.commit(mutationTypes.REMOVE_UPLOADING)
-    },
-
     onPaste ({ clipboardData: cb }) {
       if (cb.files && cb.files.length) {
         let file = cb.files[0]
@@ -63,14 +71,14 @@ export default {
       this.upload(file)
     },
 
-    onUploadSuccess (res) {
+    onUploadSuccess (uuid, res) {
       let image = {
-        ...this.uploading,
+        name: this.uploading[uuid].name,
         ...res
       }
-      this.loading = false
+
+      this.$set(this.uploading[uuid], 'loading', false)
       this.$store.commit(mutationTypes.ADD_UPLOADED, image)
-      this.$store.commit(mutationTypes.SET_UPLOADING, image)
 
       this.$notify({
         dangerouslyUseHTMLString: true,
@@ -93,35 +101,33 @@ export default {
       })
     },
 
-    onUploadError (res) {
-      this.loading = false
+    onUploadError (uuid, res) {
+      this.$set(this.uploading[uuid], 'loading', false)
       this.$message.error('上传失败：' + res.message)
     },
 
-    onUploadProgress (e) {
-      this.percent = Math.round(e.loaded / e.total * 100)
+    onUploadProgress (uuid, e) {
+      let percent = Math.round(e.loaded / e.total * 100)
+      this.$set(this.uploading[uuid], 'percent', percent)
     },
 
     upload (file) {
-      if (this.loading) {
-        this.$message.error('正在上传其他图片，请稍候...')
-        return false
+      if (!this.loading) {
+        this.uploading = {}
       }
 
-      this.percent = 0
-      this.loading = true
-
-      this.$store.commit(mutationTypes.SET_UPLOADING, {
+      let uuid = uuidv1()
+      this.$set(this.uploading, uuid, {
         name: file.name,
-        uuid: uuidv1(),
-        blob: URL.createObjectURL(file)
+        percent: 0,
+        loading: true
       })
 
       this.$store.getters.uploader.upload(
         file,
-        this.onUploadProgress,
-        this.onUploadError,
-        this.onUploadSuccess
+        this.onUploadProgress.bind(this, uuid),
+        this.onUploadError.bind(this, uuid),
+        this.onUploadSuccess.bind(this, uuid)
       )
     }
   }

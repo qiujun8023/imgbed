@@ -4,6 +4,5 @@ export default {
   providers,
   providerName: null,
   configs: {},
-  uploaded: [],
-  uploading: {}
+  uploaded: []
 }

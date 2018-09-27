@@ -19,13 +19,5 @@ export default {
 
   [mutationTypes.REMOVE_UPLOADED] (state, index) {
     state.uploaded.splice(index, 1)
-  },
-
-  [mutationTypes.SET_UPLOADING] (state, uploading) {
-    state.uploading = uploading
-  },
-
-  [mutationTypes.REMOVE_UPLOADING] (state) {
-    state.uploading = {}
   }
 }
