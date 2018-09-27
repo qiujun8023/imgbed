@@ -103,11 +103,19 @@ export default {
     }
   },
 
+  created () {
+    let { using } = this.$store.state
+    if (using) {
+      this.form.providerName = using
+      this.onProviderChange()
+    }
+  },
+
   methods: {
     onProviderChange () {
       let config = this.$store.getters.getConfig(this.form.providerName) || {}
       for (let param of this.params) {
-        this.$set(this.form, param.name, this.form[param.name] || config[param.name] || '')
+        this.$set(this.form, param.name, config[param.name] || '')
       }
     },
 
@@ -122,6 +130,9 @@ export default {
           [this.form.providerName]: this.form
         })
       })
+
+      this.$message.success('保存成功')
+      this.$router.push({ name: 'upload' })
     }
   }
 }

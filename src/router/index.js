@@ -9,8 +9,8 @@ Vue.use(VueRouter)
 
 export default new VueRouter({
   routes: [
-    { path: '/', component: Upload },
-    { path: '/uploaded', component: Uploaded },
-    { path: '/setting', component: Setting }
+    { path: '/', name: 'upload', component: Upload },
+    { path: '/uploaded', name: 'uploaded', component: Uploaded },
+    { path: '/setting', name: 'setting', component: Setting }
   ]
 })
