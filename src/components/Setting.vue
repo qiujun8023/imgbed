@@ -7,7 +7,7 @@
 
     <el-form-item
       label="服务商："
-      :prop="'provider'">
+      :prop="'providerName'">
       <el-select
         v-model="form.providerName"
         placeholder="请选择服务商"
