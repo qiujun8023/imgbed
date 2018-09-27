@@ -74,7 +74,8 @@ export default class Qiniu {
       { required: true, message: '请输入 Bucket', trigger: 'blur' }
     ],
     requestUrl: [
-      { required: true, message: '请输入加速地址', trigger: 'blur' }
+      { required: true, message: '请输入加速地址', trigger: 'blur' },
+      { type: 'url', message: '格式形如 https://example.com', trigger: 'blur' }
     ]
   }
 
@@ -103,7 +104,7 @@ export default class Qiniu {
   }
 
   successHandle (file, res) {
-    let url = this.requestUrl + '/' + _.get(res, 'data.key')
+    let url = _.trimEnd(this.requestUrl, '/') + '/' + _.get(res, 'data.key')
     return {
       url,
       name: file.name,

@@ -3,6 +3,7 @@
     ref="form"
     class="setting-cop"
     :model="form"
+    :validateOnRuleChange="false"
     :rules="rules">
 
     <el-form-item
@@ -117,6 +118,10 @@ export default {
       for (let param of this.params) {
         this.$set(this.form, param.name, config[param.name] || '')
       }
+
+      if (this.$refs['form']) {
+        this.$refs['form'].clearValidate()
+      }
     },
 
     save () {
@@ -129,10 +134,9 @@ export default {
           ...this.$store.state.configs,
           [this.form.providerName]: this.form
         })
-      })
 
-      this.$message.success('保存成功')
-      this.$router.push({ name: 'upload' })
+        this.$message.success('保存成功')
+      })
     }
   }
 }

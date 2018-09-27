@@ -46,7 +46,8 @@ export default class UpYun {
       { required: true, message: '请输入密码', trigger: 'blur' }
     ],
     requestUrl: [
-      { required: true, message: '请加速域名地址', trigger: 'blur' }
+      { required: true, message: '请加速域名地址', trigger: 'blur' },
+      { type: 'url', message: '格式形如 https://example.com', trigger: 'blur' }
     ]
   }
 
@@ -69,7 +70,7 @@ export default class UpYun {
   }
 
   successHandle (file, res) {
-    let url = this.requestUrl + _.get(res, 'data.url')
+    let url = _.trimEnd(this.requestUrl, '/') + _.get(res, 'data.url')
     return {
       url,
       name: file.name,
