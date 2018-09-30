@@ -5,6 +5,7 @@
 ### 支持的云存储
 
 - 又拍云
+- 七牛云
 
 ### 演示
 > [Demo](https://imgbed.qiujun.me/)
