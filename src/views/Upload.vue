@@ -19,16 +19,11 @@
 
 <script>
 import uuidv1 from 'uuid/v1'
-import ImageCop from '@/components/Image'
 import isImage from '@/utils/is-image'
 import * as mutationTypes from '@/store/mutation-types'
 
 export default {
   name: 'upload',
-
-  components: {
-    ImageCop
-  },
 
   data () {
     return {
